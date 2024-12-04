@@ -41,11 +41,11 @@ public class FrontExt {
     }
 
     public void transferInit() {
-        setTransfer(0.4, 0.4);
+        setTransfer(0.4, 0.45);
     }
 
     public void transferFullIn() {
-        setTransfer(0.4,0.4);
+        setTransfer(0.4,0.45);
     }
 
     public void transferMiddle() {
@@ -64,7 +64,7 @@ public class FrontExt {
     }
 
     public void frontClawOpen() {
-        setFrontClaw(0.23);
+        setFrontClaw(0.5);
     }
 
     public void frontClawGrab() {
@@ -83,6 +83,7 @@ public class FrontExt {
         setWristClaw(0.43);
     }
 
+    public void wristMiddle(){setWristClaw(0.615);}
     public void wristRotate() {
         setWristClaw(0.8);
     }
@@ -104,7 +105,7 @@ public class FrontExt {
     }
 
     public void frontPivotTransfer() {
-        setFrontPivot(0.35);
+        setFrontPivot(0.4);
     }
 
     /**
