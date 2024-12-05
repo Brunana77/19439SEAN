@@ -90,7 +90,7 @@ public class BackLift {
     }
 
     public void slideClawOpen() {
-        setSlideClaw(0.5);
+        setSlideClaw(1);
     }
 
     public void slideClawClose() {

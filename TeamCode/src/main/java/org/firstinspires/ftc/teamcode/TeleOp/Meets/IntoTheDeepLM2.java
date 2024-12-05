@@ -14,67 +14,58 @@ public class IntoTheDeepLM2 extends OpMode {
     FrontExt frontExtension = new FrontExt();
     BackLift backLift = new BackLift();
 
-    ElapsedTime runtime;
+    ElapsedTime runtime = new ElapsedTime();
+
+    // State variable for cycling wrist positions
+    int wristPosition = 0; // 0 = Init, 1 = Middle, 2 = Rotated, 3 = LeftMiddle
+    boolean rightStickPressed = false; // Debounce mechanism
 
     @Override
-    public void init(){
+    public void init() {
         drivetrain.init(hardwareMap);
         frontExtension.init(hardwareMap);
         backLift.init(hardwareMap);
-        runtime = new ElapsedTime();
+        runtime.reset();
     }
 
     @Override
     public void loop() {
-
-        //P1 drive code, field centric (up is always up)
+        // P1 drive code, field centric (up is always up)
         float forward = -gamepad1.left_stick_y;
         float right = gamepad1.left_stick_x;
         float turn = gamepad1.right_stick_x;
 
-        double mult;
-
-        if (gamepad1.left_bumper) {
-            mult = 1;
-        } else {
-            mult = 0.4;
-        }
+        double mult = gamepad1.left_bumper ? 1 : 0.4;
 
         if (gamepad1.options) {
             drivetrain.yawReset();
         }
 
         double botHeading = drivetrain.yawHeading();
-
         double rotX = right * Math.cos(-botHeading) - forward * Math.sin(-botHeading);
         double rotY = right * Math.sin(-botHeading) + forward * Math.cos(-botHeading);
-
         double denim = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(turn), 1);
 
         drivetrain.fieldCentricDrive(rotX * mult, rotY * mult, turn * mult, denim * mult);
 
         /**
-         * Button Map!
-         * P1
+         * Button Map:
+         * P1:
          * X - Hard Reset
-         * A - Transfer
-         * B - Grab
-         * L3 - Wrist Turn
-         * R3 - Wrist Reset
-         * R1 - Front Pivot Down
-         * L1 - Turbo
-         * Up - Slides Up
-         * Right - Slides Mid
-         * Down - Slides Down
-         * P2
-         * Up - Pivot Basket (High)
-         * Down - Specimen Drop
-         * Left - Specimen Grab
-         * Right - Pivot Basket (Middle)
+         * A - Transfer Specimen
+         * B - Grab Specimen
+         * R1 - Pivot Down
+         * L1 - Turbo Mode
+         * L3 - Wrist Reset to Init
+         * R3 - Cycle Wrist Positions (Init -> Middle -> Rotated -> LeftMiddle)
+         * D-Pad Up/Down/Right - Slide Positions
+         *
+         * P2:
+         * D-Pad Up/Right/Left - Basket/Specimen Pivot
          * B - Reset BackLift
          */
 
-        //Hard reset all positions.
+        // Hard reset all positions
         if (gamepad1.x) {
             backLift.slideClawOpen();
             backLift.slidePivotBase();
@@ -87,33 +78,37 @@ public class IntoTheDeepLM2 extends OpMode {
             backLift.slidesBase();
         }
 
-        //Transfer specimen from front to back extension.
+        // Transfer specimen from front to back extension
         if (gamepad1.a) {
             runtime.reset();
-            while (runtime.seconds() <= .75) {
+            while (runtime.seconds() <= 0.1)
                 frontExtension.frontPivotTransfer();
-                frontExtension.backPivotTransfer();
+            frontExtension.backPivotTransfer();
+            runtime.reset();
+            while (runtime.seconds() <= 0.75) {
                 frontExtension.wristInit();
                 frontExtension.transferFullIn();
             }
             runtime.reset();
+            while (runtime.seconds() <= 0.1) {
+                backLift.slideClawClose();
+            }
+            runtime.reset();
             while (runtime.seconds() <= 0.125) {
                 frontExtension.frontClawOpen();
-                backLift.slideClawClose();
             }
             frontExtension.frontPivotBase();
             frontExtension.backPivotBase();
         }
 
-        //Lower to grab position
-        if (gamepad1.right_bumper){
+        // Lower to grab position
+        if (gamepad1.right_bumper) {
             frontExtension.frontPivotGrab();
-            frontExtension.backPivotGrab();
             frontExtension.frontClawOpen();
         }
-        //Grab specimen.
-        if (gamepad1.b) {
 
+        // Grab specimen
+        if (gamepad1.b) {
             runtime.reset();
             while (runtime.seconds() <= 0.25) {
                 frontExtension.frontClawGrab();
@@ -122,84 +117,88 @@ public class IntoTheDeepLM2 extends OpMode {
             frontExtension.backPivotBase();
         }
 
-        //Turn wrist.
-        if (gamepad1.dpad_right) {
-            frontExtension.wristRotate();
+        // Cycle wrist positions with right stick press
+        if (gamepad1.right_stick_button && !rightStickPressed) {
+            wristPosition = (wristPosition + 1) % 4; // Cycle between 0, 1, 2, 3
+            rightStickPressed = true;
+
+            switch (wristPosition) {
+                case 0:
+                    frontExtension.wristInit();
+                    break;
+                case 1:
+                    frontExtension.wristMiddle();
+                    break;
+                case 2:
+                    frontExtension.wristRotate();
+                    break;
+                case 3:
+                    frontExtension.wristleftMiddle();
+                    break;
+            }
+        } else if (!gamepad1.right_stick_button) {
+            rightStickPressed = false; // Reset debounce flag when button is released
         }
 
-        if (gamepad1.dpad_left) {
+        // Reset wrist to Init position with left stick press
+        if (gamepad1.left_stick_button) {
+            wristPosition = 0; // Reset state to Init
             frontExtension.wristInit();
         }
-if(gamepad1.dpad_up){
-    frontExtension.wristMiddle();
-}
 
-        //Slide positions.
-        if (gamepad1.left_stick_button) {
+        // Slide positions
+        if (gamepad1.dpad_up) {
             frontExtension.transferExtend();
             frontExtension.frontPivotBase();
             frontExtension.backPivotBase();
             frontExtension.wristInit();
-        }
-
-        if (gamepad1.right_stick_button) {
+        } else if (gamepad1.dpad_right) {
             frontExtension.transferMiddle();
             frontExtension.frontPivotBase();
             frontExtension.backPivotBase();
             frontExtension.wristInit();
-        }
-
-        if (gamepad1.dpad_down) {
+        } else if (gamepad1.dpad_down) {
             frontExtension.transferFullIn();
             frontExtension.frontPivotBase();
             frontExtension.backPivotBase();
             frontExtension.wristInit();
         }
 
-        //Slide pivot for baskets.
+        // Basket pivots and specimen handling
         if (gamepad2.dpad_up) {
             backLift.slidesTop();
             backLift.slidePivotDrop();
-        }
-
-        //Drop specimen.
-        if (gamepad2.dpad_down) {
+        } else if (gamepad2.dpad_down) {
             runtime.reset();
             while (runtime.seconds() <= 0.5) {
                 backLift.slidesSpecimenHang();
             }
             backLift.specimenOpen();
-        }
-
-        //Grab specimen.
-        if (gamepad2.dpad_left) {
+        } else if (gamepad2.dpad_left) {
             runtime.reset();
-            while (runtime.seconds() <= 0.5)
+            while (runtime.seconds() <= 0.5) {
                 backLift.specimenClose();
-        }
+            }
             backLift.slidesSpecimenPreHang();
-        }
-
-        //Middle slides.
-        if (gamepad2.dpad_right) {
+        } else if (gamepad2.dpad_right) {
             backLift.slidesMiddle();
             backLift.slidePivotDrop();
         }
 
-        //Reset slides and claws.
+        // Reset slides and claws
         if (gamepad2.b) {
-        runtime.reset();
-        while (runtime.seconds() <= 0.125){
-            backLift.slideClawOpen();}
-        runtime.reset();
-        while (runtime.seconds() <= 0.25) {
-            backLift.slidePivotBase();
-        }
+            runtime.reset();
+            while (runtime.seconds() <= 0.125) {
+                backLift.slideClawOpen();
+            }
+            runtime.reset();
+            while (runtime.seconds() <= 0.25) {
+                backLift.slidePivotBase();
+            }
             backLift.specimenOpen();
             backLift.slidesBase();
         }
-
-
+    }
 
     @Override
     public void stop() {

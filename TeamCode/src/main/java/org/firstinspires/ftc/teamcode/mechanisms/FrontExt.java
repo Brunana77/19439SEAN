@@ -84,6 +84,8 @@ public class FrontExt {
     }
 
     public void wristMiddle(){setWristClaw(0.615);}
+
+    public void wristleftMiddle(){setWristClaw(0.245);}
     public void wristRotate() {
         setWristClaw(0.8);
     }
@@ -125,7 +127,7 @@ public class FrontExt {
     }
 
     public void backPivotGrab() {
-        setBackPivot(0.35);
+        setBackPivot(0.33);
     }
 
     public void backPivotPreGrab() {
