@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.TeleOp.Meets;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -10,7 +9,7 @@ import org.firstinspires.ftc.teamcode.mechanisms.Drivetrain;
 import org.firstinspires.ftc.teamcode.mechanisms.FrontExt;
 
 @TeleOp
-public class IntoTheDeepLM2 extends OpMode {
+public class IntoTheDeepLM3 extends OpMode {
     Drivetrain drivetrain = new Drivetrain();
     FrontExt frontExtension = new FrontExt();
     BackLift backLift = new BackLift();
@@ -165,8 +164,28 @@ public class IntoTheDeepLM2 extends OpMode {
             frontExtension.wristInit();
         }
 
+        if (gamepad2.a) {
+            backLift.slidesSpec();
+            backLift.slidePivotDrop();
+        }
+
+        if (gamepad2.x) {
+            runtime.reset();
+            while   (runtime.seconds() <= 0.25){
+            backLift.slidesBase(); }
+            runtime.reset();
+            while (runtime.seconds() <= 0.25) {
+                backLift.slideClawOpen();
+            }
+            backLift.slidePivotBase();
+        }
+
+        if (gamepad2.y) {
+            backLift.slideClawClose();
+        }
+
         // Basket pivots and specimen handling
-        if (gamepad2.dpad_up) {
+      /*  if (gamepad2.dpad_up) {
             backLift.slidesTop();
             backLift.slidePivotDrop();
         } else if (gamepad2.dpad_down) {
@@ -204,5 +223,8 @@ public class IntoTheDeepLM2 extends OpMode {
     @Override
     public void stop() {
         drivetrain.stopMotors();
+    }
+}
+*/
     }
 }

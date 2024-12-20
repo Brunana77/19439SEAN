@@ -66,6 +66,8 @@ public class BackLift {
         setSlides(1350);
     }
 
+    public void slidesSpec(){setSlides(500);}
+
     /**
      * The following 2 (+1) loops all have to do with SlidePivot positions.
      */
