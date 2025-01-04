@@ -92,11 +92,11 @@ public class BackLift {
     }
 
     public void slideClawOpen() {
-        setSlideClaw(1);
+        setSlideClaw(.65);
     }
 
     public void slideClawClose() {
-        setSlideClaw(0.0);
+        setSlideClaw(0.41);
     }
 
     /**

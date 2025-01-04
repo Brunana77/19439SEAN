@@ -36,7 +36,13 @@ public class IntoTheDeepLM2 extends OpMode {
         float right = gamepad1.left_stick_x;
         float turn = gamepad1.right_stick_x;
 
-        double mult = gamepad1.left_bumper ? 1 : 0.4;
+        double mult;
+        if (gamepad1.left_bumper) {
+            mult = 1;
+        } else {
+            mult = .8;
+        }
+
 
         if (gamepad1.options) {
             drivetrain.yawReset();
@@ -47,7 +53,7 @@ public class IntoTheDeepLM2 extends OpMode {
         double rotY = right * Math.sin(-botHeading) + forward * Math.cos(-botHeading);
         double denim = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(turn), 1);
 
-        drivetrain.fieldCentricDrive(rotX * mult, rotY * mult, turn * mult, denim * mult);
+        drivetrain.fieldCentricDrive(rotX * mult, rotY * mult, turn * mult, denim / mult);
 
         /**
          * Button Map:
@@ -75,7 +81,7 @@ public class IntoTheDeepLM2 extends OpMode {
             frontExtension.frontPivotTransfer();
             frontExtension.wristInit();
             frontExtension.frontClawOpen();
-            frontExtension.transferInit();
+            frontExtension.transferIn();
             backLift.slidesBase();
         }
 
@@ -91,7 +97,7 @@ public class IntoTheDeepLM2 extends OpMode {
                 frontExtension.transferFullIn();
             }
             runtime.reset();
-            while (runtime.seconds() <= 0.1) {
+            while (runtime.seconds() <= 0.125) {
                 backLift.slideClawClose();
             }
             runtime.reset();

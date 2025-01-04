@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.mechanisms.Drivetrain;
 import org.firstinspires.ftc.teamcode.mechanisms.FrontExt;
 
-@TeleOp
+
 public class IntoTheDeepLM0 extends OpMode {
     Drivetrain drivetrain = new Drivetrain();
     FrontExt scoring = new FrontExt();

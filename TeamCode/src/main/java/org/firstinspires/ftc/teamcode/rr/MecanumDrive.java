@@ -53,6 +53,14 @@ import java.util.List;
 
 @Config
 public final class MecanumDrive {
+    public TrajectoryActionBuilder trajectoryBuilder(Pose2d pose2d) {
+        return null;
+    }
+
+    public Object followTrajectory(Action traj) {
+        return null;
+    }
+
     public static class Params {
         // IMU orientation
         public RevHubOrientationOnRobot.LogoFacingDirection logoFacingDirection =
@@ -61,14 +69,14 @@ public final class MecanumDrive {
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
 
         // drive model parameters
-        public double inPerTick = 0.001044302748;
-        public double lateralInPerTick = 0.000629632936542357;
-        public double trackWidthTicks = 10120.942340498308;
+        public double inPerTick = 0.001052639465364;
+        public double lateralInPerTick = 0.0006031031439196555;
+        public double trackWidthTicks = 10716.337670858957;
 
         // feedforward parameters (in tick units)
-        public double kS = 1.3200826150938014;
-        public double kV = 0.0001642218035431705;
-        public double kA = 0.000035;
+        public double kS = 1.8046812428546173;
+        public double kV = 0.00014154935682062804;
+        public double kA = 0.0000482;
 
         // path profile parameters (in inches)
         public double maxWheelVel = 50;

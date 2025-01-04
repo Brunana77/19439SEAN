@@ -23,13 +23,13 @@ public class FrontExt {
         backPivot.setDirection(Servo.Direction.REVERSE);
         frontPivot.setDirection(Servo.Direction.REVERSE);
         frontClaw.setDirection(Servo.Direction.REVERSE);
-        leftTransfer.setDirection(Servo.Direction.REVERSE);
+        rightTransfer.setDirection(Servo.Direction.REVERSE);
 
         backPivotBase();
         frontPivotTransfer();
         wristInit();
         frontClawOpen();
-        transferInit();
+        transferIn();
     }
 
     /**
@@ -40,19 +40,19 @@ public class FrontExt {
         rightTransfer.setPosition(R);
     }
 
-    public void transferInit() {
-        setTransfer(0.4, 0.45);
+    public void transferIn() {
+        setTransfer(0.7, 0.7);
     }
 
     public void transferFullIn() {
-        setTransfer(0.4,0.45);
+        setTransfer(0.7,0.7);
     }
 
     public void transferMiddle() {
-        setTransfer(0.55, 0.55);
+        setTransfer(0.85, 0.85);
     }
     public void transferExtend() {
-        setTransfer(1.0, 0.75);
+        setTransfer(1.0, 1);
     }
 
     /**
@@ -64,11 +64,11 @@ public class FrontExt {
     }
 
     public void frontClawOpen() {
-        setFrontClaw(0.5);
+        setFrontClaw(0.65);
     }
 
     public void frontClawGrab() {
-        setFrontClaw(0.0);
+        setFrontClaw(0.02);
     }
 
     /**
@@ -107,7 +107,7 @@ public class FrontExt {
     }
 
     public void frontPivotTransfer() {
-        setFrontPivot(0.4);
+        setFrontPivot(0.2);
     }
 
     /**
@@ -119,19 +119,12 @@ public class FrontExt {
     }
 
     public void backPivotBase () {
-        setBackPivot(0.3);
+        setBackPivot(0.33);
     }
 
     public void backPivotTransfer() {
         setBackPivot(0.0);
     }
 
-    public void backPivotGrab() {
-        setBackPivot(0.33);
-    }
-
-    public void backPivotPreGrab() {
-        setBackPivot(0.3);
-    }
 
 }
