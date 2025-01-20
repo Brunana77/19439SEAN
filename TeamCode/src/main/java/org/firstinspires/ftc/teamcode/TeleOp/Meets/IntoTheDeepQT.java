@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.mechanisms.Drivetrain;
 import org.firstinspires.ftc.teamcode.mechanisms.FrontExt;
 
 @TeleOp
-public class IntoTheDeepLM3 extends OpMode {
+public class IntoTheDeepQT extends OpMode {
     Drivetrain drivetrain = new Drivetrain();
     FrontExt frontExtension = new FrontExt();
     BackLift backLift = new BackLift();

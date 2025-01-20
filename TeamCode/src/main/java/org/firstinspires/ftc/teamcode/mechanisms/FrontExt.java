@@ -68,7 +68,7 @@ public class FrontExt {
     }
 
     public void frontClawGrab() {
-        setFrontClaw(0.02);
+        setFrontClaw(0);
     }
 
     /**
@@ -119,7 +119,7 @@ public class FrontExt {
     }
 
     public void backPivotBase () {
-        setBackPivot(0.33);
+        setBackPivot(0.325);
     }
 
     public void backPivotTransfer() {
